@@ -52,8 +52,7 @@ docker-compose --version
 
 ### 2. 下载项目
 ```bash
-git clone <项目地址>
-cd 大灰狼图床系统4.0源码
+git clone https://github.com/shidahuilang/image-hosting.git
 ```
 
 ### 3. 启动服务
@@ -93,10 +92,10 @@ docker-compose logs image-host
 
 ```bash
 # 构建镜像
-docker build -t image-host .
+docker build -t image-dahuilang .
 
 # 运行容器
-docker run -d -p 8080:80 -v $(pwd)/uploads:/var/www/html/uploads --name image-host image-host
+docker run -d -p 8080:80 -v $(pwd)/uploads:/var/www/html/uploads --name image-dahuilang image-dahuilang
 ```
 
 ## 📋 传统部署（PHP环境）
@@ -109,7 +108,7 @@ docker run -d -p 8080:80 -v $(pwd)/uploads:/var/www/html/uploads --name image-ho
 ### 2. 部署步骤
 ```bash
 # 上传文件到Web目录
-将项目文件上传到网站根目录，如 /var/www/html/
+将项目文件上传到网站根目录，如 /www/wwwroot/
 
 # 设置上传目录权限
 chmod 755 uploads/
@@ -120,8 +119,8 @@ chown www-data:www-data uploads/  # Apache用户
 ```
 
 ### 3. 访问系统
-- 前端页面：http://your-domain.com/
-- 后台管理：http://your-domain.com/admin.php
+- 前端页面：http://127.0.0.1/
+- 后台管理：http://127.0.0.1/admin.php
 
 ## 🔧 系统配置
 
@@ -237,5 +236,6 @@ ports:
 本项目仅供学习和内部使用。
 
 ---
+
 
 **注意**：生产环境部署前请务必修改默认密码并进行安全配置。
