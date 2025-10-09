@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大灰狼图床 - 便捷文件存储服务</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        
+        :root {
+            --primary-color: #4361ee;
+            --primary-light: #4895ef;
+            --primary-dark: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --success-color: #06d6a0;
+            --error-color: #ef476f;
+            --warning-color: #ffd166;
+            --background-light: #f8f9fa;
+            --background-dark: #0f172a;
+            --card-bg: #ffffff;
+            --text-dark: #212529;
+            --text-light: #f8f9fa;
+            --border-radius: 12px;
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, var(--background-dark) 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            background: var(--primary-light);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.4);
+        }
+
+        .logo-icon i {
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--accent-color), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            opacity: 0.85;
+            margin-top: 10px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            background: rgba(30, 58, 138, 0.4);
+            border-radius: 50px;
+            padding: 6px;
+            margin: 20px auto 0;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(56, 124, 240, 0.2);
+        }
+
+        nav ul li {
+            margin: 0 8px;
+        }
+
+        nav ul li a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 500;
+            padding: 10px 24px;
+            border-radius: 50px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul li a:hover,
+        nav ul li a.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-light);
+        }
+
+        nav ul li a i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        main {
+            display: block;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            color: var(--text-dark);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(67, 97, 238, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        h2 i {
+            margin-right: 12px;
+            color: var(--primary-light);
+        }
+
+        /* 上传区域样式 */
+        #upload-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .upload-instruction {
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        .upload-instruction p {
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .upload-instruction .hint {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .file-input-container {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 25px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 25px 20px;
+            background: rgba(72, 149, 239, 0.08);
+            border: 2px dashed var(--primary-light);
+            border-radius: var(--border-radius);
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-input-label:hover {
+            background: rgba(72, 149, 239, 0.15);
+            border-color: var(--primary-color);
+        }
+
+        .file-input-label i {
+            display: block;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-light);
+        }
+
+        .file-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-info {
+            margin-bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .file-info p {
+            font-size: 1rem;
+            color: var(--text-dark);
+            padding: 14px 20px;
+            background: rgba(241, 245, 249, 0.7);
+            border-radius: 8px;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .upload-button {
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            color: var(--text-light);
+            padding: 16px 40px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .upload-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.5);
+        }
+
+        .upload-button:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .upload-button i {
+            margin-right: 12px;
+        }
+
+        .progress-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 30px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .progress-percent {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-family: monospace;
+        }
+
+        .progress-label {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
+
+
+
+
+
+        footer {
+            text-align: center;
+            color: var(--text-light);
+            padding: 30px 0;
+            margin-top: 30px;
+            font-size: 1rem;
+            opacity: 0.85;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .logo-icon {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .logo-icon i {
+                font-size: 1.6rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+            }
+            
+            nav ul li {
+                margin: 5px;
+                flex: 1;
+                min-width: 120px;
+            }
+            
+            nav ul li a {
+                padding: 8px 10px;
+                font-size: 0.95rem;
+                justify-content: center;
+            }
+            
+            .card {
+                padding: 25px;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .file-input-label {
+                padding: 20px 15px;
+            }
+            
+            .file-input-label i {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            header {
+                padding: 25px 0;
+            }
+            
+            .tagline {
+                font-size: 1.1rem;
+            }
+            
+            .card {
+                padding: 20px 15px;
+            }
+            
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .step-number {
+                width: 32px;
+                height: 32px;
+                margin-right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h1>大灰狼图床</h1>
+            </div>
+
+            
+            <nav>
+                <ul>
+                    <li><a href="#upload" class="active"><i class="fas fa-upload"></i> 文件上传</a></li>
+
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <section id="upload" class="card">
+                <h2><i class="fas fa-cloud-upload-alt"></i> 文件上传</h2>
+                
+                <div id="upload-box">
+                    <div class="upload-instruction">
+                        <p>选择您要上传的图片或视频文件</p>
+                        <p class="hint">支持格式：JPG, PNG, GIF, MP4, JSON, APK, IPA, MRS | 最大文件：50MB</p>
+                    </div>
+                    
+                    <div class="file-input-container">
+                        <div class="file-input-wrapper">
+                            <label class="file-input-label">
+                                <i class="fas fa-folder-plus"></i>
+                                选择文件
+                                <input type="file" id="file-input" class="file-input" multiple accept="image/*,video/*,.json,application/json">
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="file-info">
+                        <p id="selected-files">未选择任何文件</p>
+                        <p id="size-warning" style="color: var(--error-color); display: none;"></p>
+                    </div>
+                    
+                    <div class="progress-container" id="progress-container">
+                        <div class="progress-percent" id="progress-percent">0%</div>
+                        <div class="progress-label" id="progress-label">准备上传...</div>
+                    </div>
+                    
+                    <button class="upload-button" id="upload-button" disabled>
+                        <i class="fas fa-paper-plane"></i> 开始上传
+                    </button>
+                    
+
+                </div>
+            </section>
+
+
+            
+
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 创颜网络 | 每日单IP限20次上传</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            const selectedFiles = document.getElementById('selected-files');
+            const sizeWarning = document.getElementById('size-warning');
+            const uploadButton = document.getElementById('upload-button');
+            const progressContainer = document.getElementById('progress-container');
+            const progressPercent = document.getElementById('progress-percent');
+            const progressLabel = document.getElementById('progress-label');
+            
+            // 用户选择的文件
+            let selectedFilesList = [];
+            
+            // 设置文件大小
+            //标识：嘻嘻嘻哈哈哈（搜索定位专用）
+            const MAX_FILE_SIZE1=50;
+            const MAX_FILE_SIZE =  MAX_FILE_SIZE1 * 1024 * 1024; 
+
+            // 文件选择处理
+            fileInput.addEventListener('change', function() {
+                selectedFilesList = Array.from(this.files);
+                
+                // 重置警告
+                sizeWarning.style.display = 'none';
+                sizeWarning.textContent = '';
+                
+                // 检查每个文件大小
+                let hasOversize = false;
+                for (const file of selectedFilesList) {
+                    if (file.size > MAX_FILE_SIZE) {
+                        hasOversize = true;
+                        sizeWarning.textContent = `警告: "${file.name}" 超过${MAX_FILE_SIZE1}MB限制`;
+                        sizeWarning.style.display = 'block';
+                        break;
+                    }
+                }
+                
+                // 如果有文件超过大小，清空选择
+                if (hasOversize) {
+                    this.value = '';
+                    selectedFilesList = [];
+                }
+                
+                updateFileInfo();
+                
+                // 更新上传按钮状态
+                uploadButton.disabled = selectedFilesList.length === 0 || hasOversize;
+            });
+            
+            // 更新文件信息显示
+            function updateFileInfo() {
+                if (selectedFilesList.length === 0) {
+                    selectedFiles.textContent = '未选择任何文件';
+                    return;
+                }
+                
+                const fileNames = selectedFilesList.slice(0, 3).map(file => file.name);
+                let fileInfoText = `已选择 ${selectedFilesList.length} 个文件: ${fileNames.join(', ')}`;
+                
+                if (selectedFilesList.length > 3) {
+                    fileInfoText += ` 等...`;
+                }
+                
+                // 添加文件大小信息
+                const totalSize = selectedFilesList.reduce((sum, file) => sum + file.size, 0);
+                let sizeText;
+                if (totalSize < 1024) {
+                    sizeText = `${totalSize} B`;
+                } else if (totalSize < 1024 * 1024) {
+                    sizeText = `${(totalSize / 1024).toFixed(1)} KB`;
+                } else {
+                    sizeText = `${(totalSize / (1024 * 1024)).toFixed(1)} MB`;
+                }
+                
+                fileInfoText += ` | 总大小: ${sizeText}`;
+                selectedFiles.textContent = fileInfoText;
+            }
+            
+            // 上传按钮点击事件
+            uploadButton.addEventListener('click', function() {
+                if (selectedFilesList.length === 0) return;
+                
+                // 显示上传进度
+                progressContainer.style.display = 'block';
+                progressPercent.textContent = '0%';
+                progressLabel.textContent = '开始上传...';
+                
+                uploadButton.disabled = true;
+                uploadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 上传中...';
+              
+                const formData = new FormData();
+                for (const file of selectedFilesList) {
+                    formData.append('files[]', file);
+                }
+                
+                const xhr = new XMLHttpRequest();
+                
+                xhr.upload.addEventListener('progress', function(e) {
+                    if (e.lengthComputable) {
+                        const percent = Math.round((e.loaded / e.total) * 100);
+                        progressPercent.textContent = `${percent}%`;
+                        progressLabel.textContent = `上传中... ${percent}%`;
+                        
+                        if (percent === 100) {
+                            progressLabel.textContent = '正在处理文件...';
+                        }
+                    }
+                });
+                
+                // 请求完成处理
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                
+                                if (response.success) {
+                                    // 显示上传成功和直链
+                                    showUploadResults(response.files);
+                                } else {
+                                    handleUploadError(response.message || '上传失败');
+                                }
+                            } catch (e) {
+                                // 如果不是JSON响应，可能是错误页面
+                                handleUploadError('服务器响应格式错误');
+                            }
+                        } else {
+                            // 处理错误
+                            handleUploadError(`上传失败: ${xhr.statusText}`);
+                        }
+                    }
+                };
+                
+                xhr.open('POST', 'upload.php', true);
+                xhr.send(formData);
+            });
+            
+            // 处理上传错误
+            function handleUploadError(message) {
+                progressPercent.textContent = '错误';
+                progressLabel.textContent = message;
+                progressPercent.style.color = 'var(--error-color)';
+                
+                setTimeout(() => {
+                    uploadButton.disabled = false;
+                    uploadButton.innerHTML = '<i class="fas fa-paper-plane"></i> 开始上传';
+                    
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                        progressPercent.style.color = 'var(--primary-color)';
+                    }, 5000);
+                }, 2000);
+            }
+            
+            // 显示上传结果
+            function showUploadResults(files) {
+                progressPercent.textContent = '完成';
+                progressLabel.textContent = '上传成功！';
+                progressPercent.style.color = 'var(--success-color)';
+                
+                // 创建结果容器
+                const resultsContainer = document.createElement('div');
+                resultsContainer.className = 'upload-results';
+                resultsContainer.style.cssText = `
+                    width: 100%;
+                    max-width: 600px;
+                    margin: 20px auto;
+                    background: rgba(6, 214, 160, 0.1);
+                    border-radius: var(--border-radius);
+                    padding: 20px;
+                    border: 2px solid var(--success-color);
+                `;
+                
+                const resultsTitle = document.createElement('h3');
+                resultsTitle.textContent = '上传成功！您的文件直链：';
+                resultsTitle.style.cssText = `
+                    color: var(--success-color);
+                    margin-bottom: 15px;
+                    font-size: 1.3rem;
+                `;
+                
+                resultsContainer.appendChild(resultsTitle);
+                
+                files.forEach((file, index) => {
+                    const fileResult = document.createElement('div');
+                    fileResult.style.cssText = `
+                        margin-bottom: 15px;
+                        padding: 15px;
+                        background: white;
+                        border-radius: 8px;
+                        border-left: 4px solid var(--success-color);
+                    `;
+                    
+                    const fileName = document.createElement('div');
+                    fileName.textContent = `文件: ${file.name}`;
+                    fileName.style.cssText = `
+                        font-weight: bold;
+                        margin-bottom: 10px;
+                        color: var(--text-dark);
+                    `;
+                    
+                    const fileUrl = document.createElement('div');
+                    fileUrl.style.cssText = `
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        margin-bottom: 10px;
+                    `;
+                    
+                    const urlInput = document.createElement('input');
+                    urlInput.type = 'text';
+                    urlInput.value = file.url;
+                    urlInput.readOnly = true;
+                    urlInput.style.cssText = `
+                        flex: 1;
+                        padding: 10px 14px;
+                        border: 2px solid var(--primary-light);
+                        border-radius: 6px;
+                        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                        font-size: 1rem;
+                        font-weight: 500;
+                        background: #ffffff;
+                        color: var(--primary-dark);
+                        box-shadow: 0 2px 8px rgba(67, 97, 238, 0.1);
+                    `;
+                    
+                    const copyButton = document.createElement('button');
+                    copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                    copyButton.style.cssText = `
+                        padding: 8px 12px;
+                        background: var(--primary-color);
+                        color: white;
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        transition: var(--transition);
+                    `;
+                    
+                    copyButton.onclick = function() {
+                        urlInput.select();
+                        document.execCommand('copy');
+                        copyButton.innerHTML = '<i class="fas fa-check"></i>';
+                        setTimeout(() => {
+                            copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                        }, 2000);
+                    };
+                    
+                    copyButton.onmouseover = function() {
+                        this.style.background = 'var(--primary-light)';
+                    };
+                    
+                    copyButton.onmouseout = function() {
+                        this.style.background = 'var(--primary-color)';
+                    };
+                    
+                    fileUrl.appendChild(urlInput);
+                    fileUrl.appendChild(copyButton);
+                    
+                    fileResult.appendChild(fileName);
+                    fileResult.appendChild(fileUrl);
+                    resultsContainer.appendChild(fileResult);
+                });
+                
+                // 插入到上传按钮后面
+                uploadButton.parentNode.insertBefore(resultsContainer, uploadButton.nextSibling);
+                
+                // 重置上传状态
+                setTimeout(() => {
+                    uploadButton.disabled = false;
+                    uploadButton.innerHTML = '<i class="fas fa-paper-plane"></i> 开始上传';
+                    fileInput.value = '';
+                    selectedFilesList = [];
+                    updateFileInfo();
+                    
+                    // 5秒后隐藏进度条
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                    }, 5000);
+                }, 1000);
+            }
+            
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
