@@ -8,7 +8,7 @@ header('Pragma: no-cache');
 header('Expires: 0');
 
 // 简单的密码验证（实际使用中应该使用更安全的验证方式）
-$admin_password = 'a4131224'; // 默认密码，可以修改
+$admin_password = 'admin123'; // 默认密码，可以修改
 
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     if (isset($_POST['password']) && $_POST['password'] === $admin_password) {
