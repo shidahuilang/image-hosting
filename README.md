@@ -70,7 +70,6 @@ docker-compose logs -f
 
 ### 4. 访问系统
 - **前端页面**：http://localhost:8080
-- **默认密码**：123456
 - **后台管理**：http://localhost:8080/admin.php
 - **默认密码**：admin123
 
@@ -97,10 +96,7 @@ docker-compose logs image-host
 docker build -t image-host .
 
 # 运行容器
-docker run -d -p 8080:80 \
-  -v $(pwd):/var/www/html \
-  -v $(pwd)/uploads:/var/www/html/uploads \
-  --name image-host image-host
+docker run -d -p 8080:80 -v $(pwd)/uploads:/var/www/html/uploads --name image-host image-host
 ```
 
 ## 📋 传统部署（PHP环境）
@@ -242,6 +238,4 @@ ports:
 
 ---
 
-
 **注意**：生产环境部署前请务必修改默认密码并进行安全配置。
-

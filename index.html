@@ -706,8 +706,8 @@
     </style>
 
     <script>
-        // 设置访问密码（可以修改这里的密码）
-        const ACCESS_PASSWORD = '123456'; // 修改为你想要的密码
+        // 密码验证API地址
+        const PASSWORD_API = 'verify_password.php';
         
         document.addEventListener('DOMContentLoaded', function() {
             // 密码验证相关元素
@@ -718,12 +718,39 @@
             const passwordError = document.getElementById('password-error');
             const mainContent = document.querySelector('.container');
             
-            // 初始化：隐藏主内容，显示密码弹窗
-            mainContent.classList.add('content-hidden');
+            // 检查密码验证是否启用
+            checkPasswordEnabled();
             
             // 检查是否已经验证过密码（使用sessionStorage，关闭浏览器后需要重新验证）
             if (sessionStorage.getItem('access_verified') === 'true') {
                 hidePasswordModal();
+            }
+            
+            // 检查密码验证是否启用的函数
+            function checkPasswordEnabled() {
+                fetch(PASSWORD_API, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ password: '' })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.message === '密码验证已禁用') {
+                        // 密码验证被禁用，直接显示主内容
+                        hidePasswordModal();
+                        sessionStorage.setItem('access_verified', 'true');
+                    } else {
+                        // 密码验证启用，显示密码弹窗
+                        mainContent.classList.add('content-hidden');
+                    }
+                })
+                .catch(error => {
+                    console.error('检查密码设置失败:', error);
+                    // 如果API调用失败，默认启用密码验证
+                    mainContent.classList.add('content-hidden');
+                });
             }
             
             // 密码显示/隐藏切换
@@ -760,16 +787,40 @@
                     return;
                 }
                 
-                if (inputPassword === ACCESS_PASSWORD) {
-                    // 密码正确
-                    sessionStorage.setItem('access_verified', 'true');
-                    hidePasswordModal();
-                } else {
-                    // 密码错误
-                    showPasswordError('密码错误，请重新输入');
-                    passwordInput.value = '';
-                    passwordInput.focus();
-                }
+                // 禁用验证按钮，显示加载状态
+                verifyButton.disabled = true;
+                verifyButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 验证中...';
+                
+                // 使用API验证密码
+                fetch(PASSWORD_API, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ password: inputPassword })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // 密码正确
+                        sessionStorage.setItem('access_verified', 'true');
+                        hidePasswordModal();
+                    } else {
+                        // 密码错误
+                        showPasswordError('密码错误，请重新输入');
+                        passwordInput.value = '';
+                        passwordInput.focus();
+                    }
+                })
+                .catch(error => {
+                    console.error('验证错误:', error);
+                    showPasswordError('验证失败，请重试');
+                })
+                .finally(() => {
+                    // 恢复验证按钮状态
+                    verifyButton.disabled = false;
+                    verifyButton.innerHTML = '<i class="fas fa-key"></i> 验证密码';
+                });
             }
             
             // 显示密码错误

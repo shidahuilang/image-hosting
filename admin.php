@@ -2,13 +2,23 @@
 // 后台管理页面 - 查看上传的文件
 session_start();
 
+// 引入统一密码配置
+require_once 'password_config.php';
+
+// 处理退出登录（必须在任何输出之前）
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header('Location: admin.php');
+    exit;
+}
+
 // 防止页面缓存，避免重复提交问题
 header('Cache-Control: no-cache, no-store, must-revalidate');
 header('Pragma: no-cache');
 header('Expires: 0');
 
-// 简单的密码验证（实际使用中应该使用更安全的验证方式）
-$admin_password = 'admin123'; // 默认密码，可以修改
+// 使用后台管理密码
+$admin_password = getPasswordConfig()['admin_password'];
 
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     if (isset($_POST['password']) && $_POST['password'] === $admin_password) {
@@ -879,14 +889,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_files']) && is
             });
         });
     </script>
-    
-    <?php
-    // 处理退出登录
-    if (isset($_GET['logout'])) {
-        session_destroy();
-        header('Location: admin.php');
-        exit;
-    }
-    ?>
 </body>
 </html>
