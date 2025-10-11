@@ -96,7 +96,10 @@ docker-compose logs image-host
 docker build -t image-host .
 
 # 运行容器
-docker run -d -p 8080:80 -v $(pwd)/uploads:/var/www/html/uploads --name image-host image-host
+docker run -d -p 8080:80 \
+  -v $(pwd):/var/www/html \
+  -v $(pwd)/uploads:/var/www/html/uploads \
+  --name image-host image-host
 ```
 
 ## 📋 传统部署（PHP环境）
@@ -120,8 +123,8 @@ chown www-data:www-data uploads/  # Apache用户
 ```
 
 ### 3. 访问系统
-- 前端页面：http://your-domain.com/
-- 后台管理：http://your-domain.com/admin.php
+- 前端页面：http:///localhost/
+- 后台管理：http:///localhost/admin.php
 
 ## 🔧 系统配置
 
@@ -141,32 +144,32 @@ post_max_size = 200M
 max_execution_time = 300
 ```
 
-### 后台密码修改
-编辑 `admin.php` 文件，修改第6行的密码：
-```php
-$admin_password = 'your-new-password';
+### 前端和后台密码修改
+```
+编辑 `password_config.php` 文件
 ```
 
 ## 📊 系统功能
 
 ### 前端功能
-- [x] 拖拽/点击上传文件
-- [x] 多文件同时上传
-- [x] 实时上传进度显示
-- [x] 文件格式验证
-- [x] 文件大小限制
-- [x] 上传成功直链生成
-- [x] 一键复制直链
+- ✅ 拖拽/点击上传文件
+- ✅ 多文件同时上传
+- ✅ 实时上传进度显示
+- ✅ 文件格式验证
+- ✅ 文件大小限制
+- ✅ 上传成功直链生成
+- ✅ 一键复制直链
+- ✅ 前端访问密码
 
 ### 后台管理功能
-- [x] 文件列表查看
-- [x] 文件搜索筛选
-- [x] 单个文件删除
-- [x] 批量文件删除
-- [x] 文件直链复制
-- [x] 文件预览查看
-- [x] 上传统计信息
-- [x] 空间使用情况
+- ✅ 文件列表查看
+- ✅ 文件搜索筛选
+- ✅ 单个文件删除
+- ✅ 批量文件删除
+- ✅ 文件直链复制
+- ✅ 文件预览查看
+- ✅ 上传统计信息
+- ✅ 空间使用情况
 
 ## 🔒 安全说明
 
@@ -237,5 +240,6 @@ ports:
 本项目仅供学习和内部使用。
 
 ---
+
 
 **注意**：生产环境部署前请务必修改默认密码并进行安全配置。
