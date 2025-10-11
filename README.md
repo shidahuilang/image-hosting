@@ -52,8 +52,8 @@ docker-compose --version
 
 ### 2. 下载项目
 ```bash
-git clone <项目地址>
 cd 大灰狼图床系统4.0源码
+git clone https://github.com/shidahuilang/image-hosting.git
 ```
 
 ### 3. 启动服务
@@ -245,4 +245,5 @@ ports:
 
 
 **注意**：生产环境部署前请务必修改默认密码并进行安全配置。
+
 
