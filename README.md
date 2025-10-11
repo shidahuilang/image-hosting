@@ -113,7 +113,7 @@ docker run -d -p 8080:80 \
 ### 2. 部署步骤
 ```bash
 # 上传文件到Web目录
-将项目文件上传到网站根目录，如 /var/www/html/
+将项目文件上传到网站根目录，如 /www/wwwroot/
 
 # 设置上传目录权限
 chmod 755 uploads/
@@ -122,10 +122,6 @@ chown www-data:www-data uploads/  # Apache用户
 # 配置Web服务器
 # 确保支持PHP文件解析和重写规则
 ```
-
-### 3. 访问系统
-- 前端页面：http:///localhost/
-- 后台管理：http:///localhost/admin.php
 
 ## 🔧 系统配置
 
@@ -245,5 +241,6 @@ ports:
 
 
 **注意**：生产环境部署前请务必修改默认密码并进行安全配置。
+
 
 
