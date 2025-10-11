@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['files'])) {
     
     // 获取当前脚本的目录路径
     $scriptPath = dirname($_SERVER['SCRIPT_NAME']);
-    if ($scriptPath !== '/') {
+    if ($scriptPath !== '/' && $scriptPath !== '\\') {
         $baseUrl .= $scriptPath;
     }
     
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['files'])) {
         // 其他格式
         'json', 'xml', 'csv', 'html', 'htm', 'js', 'css', 'apk', 'ipa', 'mrs'
     ];
-    $maxFileSize = 50 * 1024 * 1024; // 50MB
+    $maxFileSize = 100 * 1024 * 1024; // 100MB
     
     foreach ($_FILES['files']['tmp_name'] as $key => $tmpName) {
         if ($_FILES['files']['error'][$key] !== UPLOAD_ERR_OK) {
@@ -74,6 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['files'])) {
         // 移动文件
         if (move_uploaded_file($tmpName, $targetPath)) {
             $fileUrl = $baseUrl . '/' . $uploadDir . $newFileName;
+            // 清理URL中的重复斜杠
+            $fileUrl = preg_replace('#(?<!:)/+#', '/', $fileUrl);
             $results[] = [
                 'name' => $originalName,
                 'url' => $fileUrl,

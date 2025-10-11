@@ -4,10 +4,10 @@ services:
   image-host:
     build: .
     ports:
-      - "8080:80"
+      - "8123:80"
     volumes:
-      - ./uploads:/var/www/html/uploads
-      - .:/var/www/html
+      - /volume1/docker/大灰狼图床系统4.0源码/uploads:/var/www/html/uploads
+      - /volume1/docker/大灰狼图床系统4.0源码:/var/www/html
     environment:
       - TZ=Asia/Shanghai
     restart: unless-stopped
