@@ -98,9 +98,12 @@ docker build -t image-host .
 
 # 运行容器
 docker run -d -p 8080:80 \
-  -v $(pwd):/var/www/html \
-  -v $(pwd)/uploads:/var/www/html/uploads \
-  --name image-host image-host
+docker run -d \
+  -p 8666:80 \
+  -v /volume1/docker/大灰狼自用图床:/var/www/html \
+  -v /volume1/docker/大灰狼自用图床/uploads:/var/www/html/uploads \
+  --name image-host \
+  shidahuilang/image-host:latest
 ```
 
 ## 📋 传统部署（PHP环境）
@@ -245,6 +248,7 @@ ports:
 
 
 **注意**：生产环境部署前请务必修改默认密码并进行安全配置。
+
 
 
 
